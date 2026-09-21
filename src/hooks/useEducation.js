@@ -4,6 +4,7 @@ import { readEducation, writeEducation } from '../services/educationStorage.js'
 import { readPortfolioCloud, savePortfolioCloud } from '../services/portfolioCloud.js'
 
 export function useEducation() {
+  const [loading, setLoading] = useState(true)
   const [items, setItems] = useState(() => {
     const saved = readEducation()
     const source = saved.length ? saved : initialEducation
@@ -13,7 +14,7 @@ export function useEducation() {
   useEffect(() => {
     readPortfolioCloud().then((cloud) => {
       if (Array.isArray(cloud.education)) setItems(sortEducation(cloud.education.map((item) => ({ ...item, type: getEducationType(item) }))))
-    }).catch(() => {})
+    }).catch(() => {}).finally(() => setLoading(false))
   }, [])
 
   function persist(nextItems) {
@@ -35,5 +36,5 @@ export function useEducation() {
     persist(items.filter((entry) => entry.id !== id))
   }
 
-  return { items, addEducation, updateEducation, removeEducation }
+  return { items, loading, addEducation, updateEducation, removeEducation }
 }

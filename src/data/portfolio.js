@@ -7,7 +7,6 @@ export const profile = {
   email: '23-51221-1@student.aiub.edu',
   bio: 'I build thoughtful web, mobile and connected experiences with a focus on clean architecture, useful interfaces and continuous learning.',
   about: 'I am a Computer Science student who enjoys turning complex requirements into simple, dependable products. My work sits at the intersection of software engineering, product thinking and visual craft.',
-  educationNote: 'Replace the academic placeholders below with your verified institution, degree and dates.',
 }
 
 export const navItems = [
@@ -19,10 +18,7 @@ export const navItems = [
   { label: 'Contact', href: '/contact' },
 ]
 
-export const education = [
-  { type: 'graduation', period: '2022 — Present', title: 'B.Sc. in Computer Science & Engineering', institution: 'Your University Name', detail: 'Add your department, academic achievements and expected graduation year here.', current: true },
-  { type: 'hsc', period: '2019 — 2021', title: 'Higher Secondary Certificate', institution: 'Your College Name', detail: 'Add your group, board and notable academic results here.' },
-]
+export const education = []
 
 export const educationLevels = [
   { value: 'psc', label: 'PSC' },

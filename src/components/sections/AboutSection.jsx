@@ -1,0 +1,8 @@
+import { Code2, GraduationCap, Layers3, MapPin } from 'lucide-react'
+import { profile } from '../../data/portfolio.js'
+import SectionHeading from '../ui/SectionHeading.jsx'
+
+export default function AboutSection() {
+  return <section id="about" className="border-b border-white/10 py-24 md:py-36"><SectionHeading kicker="01 / About me" title="Curious by nature. Precise by practice." text={profile.about} /><div className="grid gap-12 lg:grid-cols-[.9fr_1.1fr] lg:gap-24"><div><p className="max-w-xl text-base leading-8 text-slate-300">From native Android apps to full-stack web platforms and ESP32 prototypes, I enjoy moving from a rough idea to something people can actually use.</p><p className="mt-5 max-w-xl text-sm leading-7 text-slate-500">When I am not shipping code, I am usually studying systems design, documenting what I learn, or helping a teammate untangle a tricky problem.</p><a href="#contact" className="mt-5 inline-flex items-center gap-2 text-xs font-bold text-[#b6f36b]">Let&apos;s build something meaningful <span>↗</span></a></div><div className="grid grid-cols-1 gap-3 sm:grid-cols-2"><Fact icon={MapPin} label="Based in" value={profile.location} /><Fact icon={GraduationCap} label="Degree" value="B.Sc. in CSE" /><Fact icon={Layers3} label="Focus" value="Product engineering" /><Fact icon={Code2} label="GitHub" value="80+ contributions" /></div></div></section>
+}
+function Fact({ icon: Icon, label, value }) { return <div className="flex min-h-36 flex-col gap-3 rounded-xl border border-slate-800 bg-slate-900/50 p-5 transition hover:-translate-y-1 hover:border-slate-700"><Icon size={18} className="text-blue-300" /><span className="text-[11px] text-slate-500">{label}</span><strong className="text-sm text-slate-200">{value}</strong></div> }

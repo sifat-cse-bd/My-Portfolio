@@ -1,0 +1,34 @@
+import { motion, useMotionValue, useSpring } from 'framer-motion'
+import { ArrowUpRight, Code2, Mail, MapPin, Sparkles, Terminal } from 'lucide-react'
+import { useEffect } from 'react'
+import { Link } from 'react-router-dom'
+import { profile } from '../../data/portfolio.js'
+import { useAssetPreview } from '../../hooks/useAssetPreview.js'
+
+export default function HeroSection() {
+  const photo = useAssetPreview('photo')
+  const signature = useAssetPreview('signature')
+  const pointerX = useMotionValue(0)
+  const pointerY = useMotionValue(0)
+  const springX = useSpring(pointerX, { stiffness: 70, damping: 18 })
+  const springY = useSpring(pointerY, { stiffness: 70, damping: 18 })
+  const pointerLeft = useMotionValue('50%')
+  const pointerTop = useMotionValue('50%')
+
+  useEffect(() => {
+    const handlePointer = (event) => {
+      pointerX.set((event.clientX / window.innerWidth - 0.5) * 28)
+      pointerY.set((event.clientY / window.innerHeight - 0.5) * 28)
+      pointerLeft.set(`${(event.clientX / window.innerWidth) * 100}%`)
+      pointerTop.set(`${(event.clientY / window.innerHeight) * 100}%`)
+    }
+    window.addEventListener('pointermove', handlePointer, { passive: true })
+    return () => window.removeEventListener('pointermove', handlePointer)
+  }, [pointerX, pointerY, pointerLeft, pointerTop])
+
+  return <section className="relative grid min-h-[calc(100svh-7rem)] items-center gap-8 py-12 lg:grid-cols-[1.05fr_.95fr] lg:gap-10 lg:py-10 max-lg:min-h-0 max-lg:pt-10" id="top"><InteractiveBackdrop pointerLeft={pointerLeft} pointerTop={pointerTop} springX={springX} springY={springY} /><motion.div initial={{ opacity: 0, y: 18 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: .7 }} className="relative z-10 max-w-2xl"><div className="inline-flex items-center gap-2 rounded-full border border-white/10 bg-slate-900/70 px-3 py-2 text-[11px] text-slate-300 backdrop-blur"><i className="size-1.5 rounded-full bg-emerald-400 shadow-[0_0_12px_#10b981]" />{profile.availability}</div><p className="mt-8 mb-4 font-mono text-[10px] uppercase tracking-[.09em] text-indigo-300">{profile.role}</p><h1 className="max-w-3xl text-5xl font-extrabold leading-[1.02] tracking-[-.075em] text-slate-100 sm:text-7xl lg:text-[5.6rem]">Building digital products with <span className="text-indigo-400">clarity & craft.</span></h1><p className="mt-6 max-w-xl text-base leading-7 text-slate-400">{profile.bio}</p><div className="mt-7 flex flex-wrap gap-3"><Link to="/projects" className="inline-flex items-center gap-2 rounded-lg bg-indigo-500 px-4 py-3 text-xs font-bold text-white shadow-[0_0_28px_rgba(99,102,241,.25)] transition hover:-translate-y-0.5 hover:bg-indigo-400">Explore projects <ArrowUpRight size={16} /></Link><Link to="/contact" className="inline-flex items-center gap-2 rounded-lg border border-slate-700 bg-slate-900/60 px-4 py-3 text-xs font-bold text-slate-200 transition hover:-translate-y-0.5 hover:border-slate-500">Get in touch <Mail size={16} /></Link></div><div className="mt-8 flex flex-col gap-3 font-mono text-[10px] text-slate-500 sm:flex-row sm:gap-6"><span className="flex items-center gap-2"><MapPin size={14} className="text-cyan-300" />{profile.location}</span><span className="flex items-center gap-2"><Sparkles size={14} className="text-emerald-400" />Available for opportunities</span></div><ReadOnlySignature signature={signature.preview} /></motion.div><ProfileVisual photo={photo.preview} /></section>
+}
+
+function InteractiveBackdrop({ pointerLeft, pointerTop, springX, springY }) { return <div className="pointer-events-none absolute inset-0 overflow-hidden"><div className="absolute inset-0 opacity-30 [background-image:linear-gradient(rgba(148,163,184,.06)_1px,transparent_1px),linear-gradient(90deg,rgba(148,163,184,.06)_1px,transparent_1px)] [background-size:72px_72px]" /><motion.div style={{ x: springX, y: springY, left: pointerLeft, top: pointerTop }} className="absolute size-80 -translate-x-1/2 -translate-y-1/2 rounded-full bg-indigo-500/10 blur-3xl" /><motion.div animate={{ scale: [1, 1.12, 1], opacity: [.12, .2, .12] }} transition={{ duration: 6, repeat: Infinity, ease: 'easeInOut' }} className="absolute -left-40 top-24 size-[620px] rounded-full bg-cyan-500/10 blur-3xl" /></div> }
+function ProfileVisual({ photo }) { return <motion.div initial={{ opacity: 0, scale: .94 }} animate={{ opacity: 1, scale: 1 }} transition={{ delay: .12, duration: .8 }} className="relative grid min-h-[360px] place-items-center lg:min-h-[470px]"><div className="absolute h-48 w-[400px] rotate-[-20deg] rounded-[50%] border border-indigo-400/20 shadow-[0_0_90px_rgba(99,102,241,.2)]" /><div className="absolute h-[430px] w-[270px] rotate-[55deg] rounded-[50%] border border-emerald-400/20" /><div className="relative grid size-48 place-items-center rounded-full bg-gradient-to-br from-indigo-500 via-violet-500 to-emerald-400 p-[3px] shadow-[0_0_70px_rgba(99,102,241,.28)] transition duration-500 hover:scale-105 hover:shadow-[0_0_100px_rgba(16,185,129,.3)]"><div className="grid size-full place-items-center overflow-hidden rounded-full border-4 border-[#090d16] bg-slate-900">{photo ? <img src={photo} alt={`${profile.name} profile`} className="size-full object-cover" /> : <span className="font-mono text-4xl text-slate-100">{profile.initials}</span>}</div><span className="absolute -bottom-2 right-2 inline-flex items-center gap-1.5 rounded-full border border-emerald-400/30 bg-slate-950/90 px-3 py-1.5 text-[10px] text-emerald-300 shadow-xl backdrop-blur"><i className="size-1.5 rounded-full bg-emerald-400 shadow-[0_0_10px_#10b981]" /> Open for opportunities</span></div><div className="absolute right-[5%] top-14 flex items-center gap-2 rounded-lg border border-white/10 bg-slate-800/70 px-3 py-2 text-[11px] text-slate-300 shadow-xl backdrop-blur-xl"><Code2 size={16} className="text-cyan-300" /> Clean code</div><div className="absolute bottom-10 left-0 flex items-center gap-2 rounded-lg border border-white/10 bg-slate-800/70 px-3 py-2 text-[11px] text-slate-300 shadow-xl backdrop-blur-xl"><Terminal size={16} className="text-emerald-400" /> Always learning</div></motion.div> }
+function ReadOnlySignature({ signature }) { return <div className="mt-8 flex min-h-20 max-w-xs items-center justify-center rounded-xl border border-indigo-400/20 bg-white/[.03] px-5 py-3 shadow-[0_0_35px_rgba(139,92,246,.12)] backdrop-blur">{signature ? <img src={signature} alt="Faruk Ahmed Sifat signature" className="max-h-14 max-w-full object-contain opacity-90" /> : <span className="font-mono text-[10px] text-slate-600">Signature will appear here</span>}</div> }

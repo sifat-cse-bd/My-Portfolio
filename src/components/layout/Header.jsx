@@ -2,10 +2,12 @@
 import { useEffect, useState } from 'react'
 import { Link, NavLink } from 'react-router-dom'
 import { navItems, profile } from '../../data/portfolio.js'
+import { useAssetPreview } from '../../hooks/useAssetPreview.js'
 
 export default function Header() {
   const [open, setOpen] = useState(false)
   const [isScrolled, setIsScrolled] = useState(false)
+  const photo = useAssetPreview('photo')
   const close = () => setOpen(false)
 
   useEffect(() => {
@@ -23,18 +25,20 @@ export default function Header() {
   }, [])
 
   return (
-    <header className="fixed inset-x-0 top-0 z-50 px-2 transition-all duration-300 ease-in-out sm:px-4">
+    <header className={`fixed inset-x-0 top-0 z-50 transition-all duration-300 ease-in-out ${isScrolled ? '' : 'px-2 sm:px-4'}`}>
       <div
         className={[
-          'mx-auto w-full max-w-[1500px] transition-all duration-300 ease-in-out',
+          'w-full transition-all duration-300 ease-in-out',
           isScrolled
             ? 'mt-0 rounded-none border-b border-[var(--border)] bg-[color:var(--panel-strong)] shadow-[0_10px_30px_var(--shadow)] backdrop-blur-xl'
-            : 'mt-3 rounded-full border border-[var(--border)] bg-[color:var(--panel)] shadow-[0_14px_40px_var(--shadow)] backdrop-blur-md'
+            : 'mx-auto mt-3 max-w-[1500px] rounded-full border border-[var(--border)] bg-[color:var(--panel)] shadow-[0_14px_40px_var(--shadow)] backdrop-blur-md'
         ].join(' ')}
       >
         <div className="flex items-center justify-between gap-4 px-4 py-3 sm:px-6">
           <Link to="/" onClick={close} className="flex items-center gap-2.5 text-sm font-extrabold tracking-tight text-[var(--text)]">
-            <span className="grid size-8 place-items-center rounded-lg bg-[var(--accent-button)] font-mono text-[10px] font-bold text-black shadow-[0_0_24px_rgba(248,217,122,0.3)]">FAS</span>
+            <span className="grid size-8 place-items-center overflow-hidden rounded-full border border-[var(--border)] bg-[var(--accent-soft)] font-mono text-[10px] font-bold text-[var(--text)] shadow-[0_0_24px_rgba(248,217,122,0.18)]">
+              {photo.preview && photo.preview !== '__loading__' ? <img src={photo.preview} alt="" className="size-full object-cover" /> : photo.loading ? <span className="size-full animate-pulse rounded-full bg-[var(--accent-soft)]" /> : profile.initials}
+            </span>
             <span>{profile.name}</span>
           </Link>
 

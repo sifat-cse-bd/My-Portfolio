@@ -11,7 +11,7 @@ export default function PageLayout() {
     <div className="min-h-screen bg-[var(--bg)] text-[var(--text)]">
       <Header />
       <ThemeToggle />
-      <main className="mx-auto min-h-[calc(100vh-6rem)] w-full max-w-[1500px] bg-[var(--bg)] px-2 pt-24 sm:px-4 lg:px-6">
+      <main className="mx-auto min-h-[calc(100vh-6rem)] w-full max-w-[1500px] bg-[var(--bg)] px-2 pt-16 sm:px-4 lg:px-6">
         <AnimatePresence mode="wait">
           <motion.div
             key={location.pathname}

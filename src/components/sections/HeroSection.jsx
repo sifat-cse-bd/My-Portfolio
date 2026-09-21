@@ -34,7 +34,7 @@ export default function HeroSection() {
   }, [pointerX, pointerY, pointerLeft, pointerTop])
 
   return (
-    <section className="relative isolate overflow-hidden bg-[var(--bg)] pb-16 pt-20 text-[var(--text)] sm:pt-28" id="top">
+    <section className="relative isolate overflow-hidden bg-[var(--bg)] pb-16 pt-8 text-[var(--text)] sm:pt-14" id="top">
       <div className="absolute inset-x-0 bottom-[-18%] h-[55vh] min-h-[420px] overflow-hidden">
         <motion.div
           style={{ x: springX, y: springY, left: pointerLeft, top: pointerTop }}
@@ -106,7 +106,13 @@ export default function HeroSection() {
 
                   <div className="relative mx-auto flex max-w-[220px] justify-center">
                     <div className="relative grid size-44 place-items-center overflow-hidden rounded-full border border-[var(--border)] bg-[radial-gradient(circle_at_top,_rgba(255,122,47,0.22),_rgba(255,255,255,0.02)_60%)] shadow-[0_20px_50px_rgba(15,23,42,0.17)]">
-                      {photo.preview && photo.preview !== '__loading__' ? (
+                      {photo.loading || photo.preview === '__loading__' ? (
+                        <div className="relative flex size-full items-center justify-center bg-[var(--accent-soft)]">
+                          <span className="absolute size-32 animate-spin rounded-full border-2 border-[var(--accent)]/20 border-t-[var(--accent)]" />
+                          <span className="absolute size-24 animate-pulse rounded-full border border-[var(--accent-2)]/50" />
+                          <span className="size-3 animate-pulse rounded-full bg-[var(--accent)] shadow-[0_0_18px_var(--accent)]" />
+                        </div>
+                      ) : photo.preview ? (
                         <img src={photo.preview} alt={profile.name} className="size-full object-cover" />
                       ) : (
                         <div className="flex size-full items-center justify-center bg-[linear-gradient(135deg,#f8d97a_0%,#ffb36b_45%,#ff7a2f_100%)] text-5xl font-bold text-slate-900">
@@ -123,7 +129,7 @@ export default function HeroSection() {
                   <div className="mt-5 rounded-2xl border border-[var(--border)] bg-black/10 px-3 py-3">
                     <div className="text-[10px] uppercase tracking-[0.16em] text-[var(--muted)]">Signature</div>
                     {signature.preview && signature.preview !== '__loading__' ? (
-                      <img src={signature.preview} alt="Signature" className="mt-2 max-h-12 object-contain opacity-90" />
+                      <img src={signature.preview} alt="Signature" className="mx-auto mt-2 block max-h-12 max-w-full object-contain opacity-90" />
                     ) : (
                       <div className="mt-2 font-mono text-[11px] tracking-[0.24em] text-[var(--muted-strong)]">FAS</div>
                     )}

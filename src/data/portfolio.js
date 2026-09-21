@@ -10,6 +10,7 @@ export const profile = {
 }
 
 export const navItems = [
+  { label: 'Home', href: '/' },
   { label: 'About', href: '/about' },
   { label: 'Academics', href: '/academics' },
   { label: 'Skills', href: '/skills' },

@@ -35,9 +35,9 @@ export default function HomePage() {
             <span className="text-xs font-bold text-[var(--text)]">Current focus</span>
             <span className="font-mono text-[10px] text-emerald-500">2025</span>
           </div>
-          <FocusBar label="Academic growth" value="88%" width="88%" />
-          <FocusBar label="Product thinking" value="76%" width="76%" />
-          <FocusBar label="Research & learning" value="92%" width="92%" />
+          <FocusBar label="Academic growth" value="88%" width="88%" tone="blue" />
+          <FocusBar label="Product thinking" value="76%" width="76%" tone="orange" />
+          <FocusBar label="Research & learning" value="92%" width="92%" tone="green" />
         </div>
       </section>
 
@@ -155,4 +155,4 @@ export default function HomePage() {
   )
 }
 
-function FocusBar({ label, value, width }) { const ref = useRef(null); const visible = useInView(ref, { once: true, amount: .7 }); return <div ref={ref} className="mt-5"><div className="mb-2 flex justify-between text-[10px] text-slate-500"><span>{label}</span><span>{value}</span></div><div className="h-1.5 overflow-hidden rounded-full bg-slate-200"><motion.i initial={{ width: 0 }} animate={{ width: visible ? width : 0 }} transition={{ duration: 1.1, ease: [0.22, 1, 0.36, 1] }} className="block h-full rounded-full bg-gradient-to-r from-[#ff5a1f] via-[#ff8a3d] to-[#e6ff00]" /></div></div> }
+function FocusBar({ label, value, width, tone }) { const ref = useRef(null); const visible = useInView(ref, { once: true, amount: .7 }); const tones = { blue: { label: 'text-blue-400', bar: 'from-blue-700 via-blue-500 to-sky-300', glow: 'rgba(59,130,246,0.35)' }, orange: { label: 'text-orange-400', bar: 'from-orange-700 via-orange-500 to-amber-300', glow: 'rgba(249,115,22,0.35)' }, green: { label: 'text-emerald-400', bar: 'from-emerald-700 via-green-500 to-lime-300', glow: 'rgba(34,197,94,0.35)' } }; const style = tones[tone] || tones.blue; return <div ref={ref} className="mt-5"><div className="mb-2 flex justify-between text-[10px] text-[var(--muted)]"><span>{label}</span><span className={`font-mono ${style.label}`}>{value}</span></div><div className="h-1.5 overflow-hidden rounded-full bg-slate-200/20"><motion.i initial={{ width: 0 }} animate={{ width: visible ? width : 0 }} transition={{ duration: 1.1, ease: [0.22, 1, 0.36, 1] }} className={`block h-full rounded-full bg-gradient-to-r ${style.bar}`} style={{ boxShadow: `0 0 14px ${style.glow}` }} /></div></div> }

@@ -15,6 +15,9 @@ export async function savePortfolioCloud(data) {
     },
     body: JSON.stringify(data),
   })
-  if (!response.ok) throw new Error('Unable to save portfolio data.')
+  if (!response.ok) {
+    const detail = await response.json().catch(() => ({}))
+    throw new Error(detail.error || 'Unable to save portfolio data.')
+  }
   return response.json()
 }

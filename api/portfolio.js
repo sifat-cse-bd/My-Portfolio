@@ -53,7 +53,10 @@ async function supabaseRequest(method, path, body, extraHeaders = {}) {
     },
     body: body ? JSON.stringify(body) : undefined,
   })
-  if (!result.ok) throw new Error(`Supabase request failed: ${result.status}`)
+  if (!result.ok) {
+    const detail = await result.text()
+    throw new Error(`Supabase request failed: ${result.status}${detail ? ` - ${detail.slice(0, 300)}` : ''}`)
+  }
   return result.status === 204 ? [] : result.json()
 }
 

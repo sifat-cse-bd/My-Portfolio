@@ -24,8 +24,8 @@ export default function AdminPage() {
         assets: readProfileAssets(),
       })
       setSyncMessage('Published. Visitors now see this data from the central database.')
-    } catch {
-      setSyncMessage('Publish failed. Check the database and Vercel environment variables.')
+    } catch (error) {
+      setSyncMessage(`Publish failed: ${error.message}`)
     }
   }
 

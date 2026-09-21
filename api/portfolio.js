@@ -43,7 +43,8 @@ export default async function handler(request, response) {
 }
 
 async function supabaseRequest(method, path, body, extraHeaders = {}) {
-  const result = await fetch(`${process.env.SUPABASE_URL}/rest/v1/${path}`, {
+  const supabaseUrl = process.env.SUPABASE_URL.replace(/\/rest\/v1\/?$/, '').replace(/\/$/, '')
+  const result = await fetch(`${supabaseUrl}/rest/v1/${path}`, {
     method,
     headers: {
       apikey: process.env.SUPABASE_SERVICE_ROLE_KEY,

@@ -6,7 +6,7 @@ function getSystemTheme() {
 }
 
 export function ThemeProvider({ children }) {
-  const [preference, setPreference] = useState(() => localStorage.getItem('faruk-theme') || 'system')
+  const [preference, setPreference] = useState(() => localStorage.getItem('faruk-theme') || 'dark')
   const [systemTheme, setSystemTheme] = useState(() => getSystemTheme())
   const theme = preference === 'system' ? systemTheme : preference
 
@@ -19,6 +19,7 @@ export function ThemeProvider({ children }) {
 
   useEffect(() => {
     document.documentElement.dataset.theme = theme
+    document.documentElement.style.colorScheme = theme
     localStorage.setItem('faruk-theme', preference)
   }, [preference, theme])
 

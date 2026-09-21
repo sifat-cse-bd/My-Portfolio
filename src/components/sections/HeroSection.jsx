@@ -1,17 +1,19 @@
 ﻿import { motion, useMotionValue, useSpring } from 'framer-motion'
-import { ArrowRight, Clock3, Layers3, Sparkles } from 'lucide-react'
+import { ArrowUpRight, Camera, Sparkles } from 'lucide-react'
 import { useEffect } from 'react'
 import { Link } from 'react-router-dom'
+import { profile } from '../../data/portfolio.js'
+import { useAssetPreview } from '../../hooks/useAssetPreview.js'
 
-const tabs = [
-  { label: 'To do', color: 'bg-indigo-500/20 text-indigo-300 border-indigo-400/30' },
-  { label: 'In Progress', color: 'bg-cyan-500/20 text-cyan-300 border-cyan-400/30' },
-  { label: 'Approved', color: 'bg-emerald-500/20 text-emerald-300 border-emerald-400/30' }
+const metrics = [
+  { label: 'Projects', value: '08+' },
+  { label: 'Academic focus', value: 'CS' },
+  { label: 'Portfolio', value: 'Student' },
 ]
 
-const partnerLogos = ['Vercel', 'Grab', 'Apple', 'X', 'Notion']
-
 export default function HeroSection() {
+  const photo = useAssetPreview('photo')
+  const signature = useAssetPreview('signature')
   const pointerX = useMotionValue(0)
   const pointerY = useMotionValue(0)
   const springX = useSpring(pointerX, { stiffness: 70, damping: 18 })
@@ -32,131 +34,133 @@ export default function HeroSection() {
   }, [pointerX, pointerY, pointerLeft, pointerTop])
 
   return (
-    <section className="relative isolate overflow-hidden bg-black pb-16 pt-24 text-white sm:pt-28" id="top">
-      <div className="absolute inset-x-0 bottom-[-22%] h-[58vh] min-h-[420px] overflow-hidden">
+    <section className="relative isolate overflow-hidden bg-[var(--bg)] pb-16 pt-20 text-[var(--text)] sm:pt-28" id="top">
+      <div className="absolute inset-x-0 bottom-[-18%] h-[55vh] min-h-[420px] overflow-hidden">
         <motion.div
           style={{ x: springX, y: springY, left: pointerLeft, top: pointerTop }}
-          className="absolute left-1/2 top-[25%] h-[540px] w-[1600px] -translate-x-1/2 rounded-[50%] bg-[radial-gradient(circle_at_center,_rgba(255,120,0,0.95)_0%,_rgba(255,85,0,0.82)_16%,_rgba(255,170,0,0.72)_28%,_rgba(0,0,0,0)_72%)] blur-[10px]"
+          className="absolute left-1/2 top-[35%] h-[540px] w-[1500px] -translate-x-1/2 rounded-[50%] bg-[radial-gradient(circle_at_center,_rgba(255,122,47,0.7)_0%,_rgba(255,122,47,0.45)_18%,_rgba(255,122,47,0.15)_28%,_rgba(0,0,0,0)_72%)] blur-[10px]"
         />
-        <div className="absolute inset-x-0 bottom-[-20%] h-[340px] bg-[radial-gradient(circle_at_center,_rgba(255,120,0,0.55)_0%,_rgba(255,85,0,0.3)_25%,_rgba(0,0,0,0)_75%)]" />
+        <div className="absolute inset-x-0 bottom-[-22%] h-[360px] bg-[radial-gradient(circle_at_center,_rgba(255,122,47,0.42)_0%,_rgba(255,122,47,0.16)_24%,_rgba(0,0,0,0)_70%)]" />
       </div>
 
-      <div className="relative mx-auto max-w-6xl px-4 sm:px-6 lg:px-8">
-        <div className="grid items-center gap-10 lg:grid-cols-[0.95fr_1.05fr]">
+      <div className="relative mx-auto max-w-[1500px] px-4 sm:px-6 lg:px-8">
+        <div className="grid items-center gap-10 lg:grid-cols-[1.05fr_0.95fr]">
           <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.6 }} className="relative z-10 max-w-xl pb-12 lg:pb-16">
-            <h1 className="text-5xl font-extrabold leading-[0.9] tracking-[-0.07em] text-white sm:text-6xl lg:text-[6.3rem]">
-              Design by <br className="hidden sm:block" /> Drag &amp; Drop
+            <div className="mb-6 inline-flex items-center gap-2 rounded-full border border-[var(--border)] bg-[var(--panel)] px-3 py-2 text-[11px] font-medium uppercase tracking-[0.18em] text-[var(--muted)] backdrop-blur-sm">
+              <span className="inline-flex size-2 rounded-full bg-[var(--accent)] shadow-[0_0_12px_rgba(255,122,47,0.9)]" />
+              Computer Science Student
+            </div>
+
+            <h1 className="text-5xl font-extrabold leading-[0.88] tracking-[-0.08em] text-[var(--text)] sm:text-6xl lg:text-[7rem]">
+              {profile.name.split(' ')[0]}<br />{profile.name.split(' ').slice(1).join(' ')}
             </h1>
 
-            <p className="mt-6 max-w-md text-base leading-7 text-slate-300">
-              Design subscriptions for every brand. Pause or cancel anytime.
+            <p className="mt-6 max-w-md text-base leading-7 text-[var(--muted)]">
+              I’m a student developer building software, interfaces, and practical ideas with curiosity, discipline, and care for real users.
             </p>
 
-            <div className="mt-8 flex flex-wrap items-center gap-4">
-              <Link to="/projects" className="inline-flex items-center gap-2 rounded-full bg-[#e6ff00] px-5 py-3 text-sm font-semibold text-black shadow-[0_0_30px_rgba(230,255,0,0.4)] transition hover:-translate-y-0.5 hover:bg-[#f2ff4d]">
-                See Plan
-                <ArrowRight size={16} />
+            <div className="mt-7 flex flex-wrap items-center gap-4">
+              <Link to="/about" className="inline-flex items-center gap-2 rounded-full bg-[var(--accent-button)] px-5 py-3 text-sm font-semibold text-black shadow-[0_0_30px_rgba(248,217,122,0.32)] transition hover:-translate-y-0.5 hover:brightness-110">
+                About me
+                <ArrowUpRight size={16} />
               </Link>
 
-              <div className="inline-flex items-center gap-2 rounded-full border border-white/10 bg-white/5 px-3 py-2 text-[11px] font-medium text-slate-200 backdrop-blur-sm">
-                <span className="inline-flex size-2.5 rounded-full bg-[#e6ff00] shadow-[0_0_12px_rgba(230,255,0,0.8)]" />
-                <span>2 spots left</span>
+              <div className="inline-flex items-center gap-2 rounded-full border border-[var(--border)] bg-[var(--panel)] px-3 py-2 text-[11px] font-medium text-[var(--muted)] backdrop-blur-sm">
+                <span className="inline-flex size-2.5 rounded-full bg-emerald-500 shadow-[0_0_12px_rgba(16,185,129,0.75)]" />
+                Available for internships
               </div>
+            </div>
+
+            <div className="mt-8 grid max-w-md grid-cols-3 gap-3">
+              {metrics.map((item) => (
+                <div key={item.label} className="rounded-2xl border border-[var(--border)] bg-[var(--panel)] px-3 py-3 text-center">
+                  <div className="text-xl font-extrabold tracking-[-0.06em] text-[var(--text)]">{item.value}</div>
+                  <div className="mt-1 text-[10px] uppercase tracking-[0.14em] text-[var(--muted)]">{item.label}</div>
+                </div>
+              ))}
             </div>
           </motion.div>
 
-          <motion.div initial={{ opacity: 0, scale: 0.96 }} animate={{ opacity: 1, scale: 1 }} transition={{ duration: 0.7, delay: 0.1 }} className="relative z-10 pb-20 lg:pb-28">
-            <div className="glass-panel relative mx-auto max-w-[560px] rounded-[28px] p-4 shadow-[0_40px_120px_rgba(255,85,0,0.18)]">
-              <div className="flex items-center justify-between rounded-2xl border border-white/10 bg-black/30 px-4 py-3 text-[11px] text-slate-300">
+          <motion.div initial={{ opacity: 0, scale: 0.96 }} animate={{ opacity: 1, scale: 1 }} transition={{ duration: 0.7, delay: 0.1 }} className="relative z-10 pb-10 lg:pb-16">
+            <div className="glass-panel relative mx-auto max-w-[620px] rounded-[28px] p-4 shadow-[0_40px_120px_rgba(255,122,47,0.12)]">
+              <div className="flex items-center justify-between rounded-2xl border border-[var(--border)] bg-black/20 px-4 py-3 text-[11px] text-[var(--muted)]">
                 <div className="flex items-center gap-2">
                   <span className="flex gap-1.5">
                     <i className="block size-2 rounded-full bg-white/60" />
                     <i className="block size-2 rounded-full bg-white/30" />
                     <i className="block size-2 rounded-full bg-white/20" />
                   </span>
-                  <span className="ml-2 font-medium">DesignLab Dashboard</span>
+                  <span className="ml-2 font-medium text-[var(--muted-strong)]">Student Portfolio Dashboard</span>
                 </div>
-                <span className="rounded-full border border-white/10 bg-white/5 px-2 py-1 text-[10px] uppercase tracking-[0.14em] text-slate-300">
+                <span className="rounded-full border border-[var(--border)] bg-[var(--panel)] px-2 py-1 text-[10px] uppercase tracking-[0.14em] text-[var(--text)]">
                   Live
                 </span>
               </div>
 
-              <div className="mt-4 flex items-center justify-between rounded-xl border border-white/10 bg-white/5 p-2">
-                {tabs.map((tab) => (
-                  <span key={tab.label} className={`rounded-lg border px-3 py-2 text-[10px] font-medium ${tab.color}`}>
-                    {tab.label}
-                  </span>
-                ))}
-              </div>
-
-              <div className="mt-5 grid gap-3 rounded-2xl border border-white/10 bg-black/20 p-3 sm:grid-cols-[1.15fr_0.85fr]">
-                <div className="rounded-2xl border border-white/10 bg-white/5 p-4">
-                  <div className="flex items-center justify-between text-[10px] text-slate-300">
-                    <span>Brand Identity</span>
-                    <span className="rounded-full border border-emerald-400/30 bg-emerald-500/10 px-2 py-1 text-[9px] text-emerald-300">Approved</span>
+              <div className="mt-5 grid gap-4 lg:grid-cols-[1.08fr_0.92fr]">
+                <div className="rounded-[22px] border border-[var(--border)] bg-[var(--panel)] p-4">
+                  <div className="flex items-center justify-between pb-3 text-[10px] text-[var(--muted)]">
+                    <span>Profile snapshot</span>
+                    <span className="rounded-full bg-emerald-500/10 px-2 py-1 text-[9px] uppercase tracking-[0.12em] text-emerald-500">Open</span>
                   </div>
-                  <div className="mt-4 space-y-3">
-                    {['Logo', 'Landing page', 'Brand guidelines'].map((item) => (
-                      <div key={item} className="flex items-center justify-between rounded-xl border border-white/10 bg-black/20 px-3 py-2">
-                        <div className="flex items-center gap-2 text-[11px] text-slate-300">
-                          <span className="grid size-6 place-items-center rounded-md bg-[#e6ff00]/15 text-[#e6ff00]">
-                            <Layers3 size={12} />
-                          </span>
-                          {item}
+
+                  <div className="relative mx-auto flex max-w-[220px] justify-center">
+                    <div className="relative grid size-44 place-items-center overflow-hidden rounded-full border border-[var(--border)] bg-[radial-gradient(circle_at_top,_rgba(255,122,47,0.22),_rgba(255,255,255,0.02)_60%)] shadow-[0_20px_50px_rgba(15,23,42,0.17)]">
+                      {photo.preview && photo.preview !== '__loading__' ? (
+                        <img src={photo.preview} alt={profile.name} className="size-full object-cover" />
+                      ) : (
+                        <div className="flex size-full items-center justify-center bg-[linear-gradient(135deg,#f8d97a_0%,#ffb36b_45%,#ff7a2f_100%)] text-5xl font-bold text-slate-900">
+                          {profile.initials}
                         </div>
-                        <span className="text-[9px] uppercase tracking-[0.14em] text-slate-500">Ready</span>
-                      </div>
-                    ))}
+                      )}
+                    </div>
+                    <span className="absolute -bottom-2 right-2 inline-flex items-center gap-2 rounded-full border border-[var(--border)] bg-[var(--panel)] px-3 py-1.5 text-[10px] font-medium text-[var(--text)] backdrop-blur-sm">
+                      <Camera size={12} className="text-[var(--accent)]" />
+                      Student profile
+                    </span>
+                  </div>
+
+                  <div className="mt-5 rounded-2xl border border-[var(--border)] bg-black/10 px-3 py-3">
+                    <div className="text-[10px] uppercase tracking-[0.16em] text-[var(--muted)]">Signature</div>
+                    {signature.preview && signature.preview !== '__loading__' ? (
+                      <img src={signature.preview} alt="Signature" className="mt-2 max-h-12 object-contain opacity-90" />
+                    ) : (
+                      <div className="mt-2 font-mono text-[11px] tracking-[0.24em] text-[var(--muted-strong)]">FAS</div>
+                    )}
                   </div>
                 </div>
 
-                <div className="rounded-2xl border border-white/10 bg-white/5 p-4">
-                  <div className="flex items-center justify-between text-[10px] text-slate-300">
-                    <span>Progress</span>
-                    <span className="text-[#e6ff00]">68%</span>
+                <div className="rounded-[22px] border border-[var(--border)] bg-[var(--panel)] p-4">
+                  <div className="flex items-center justify-between text-[10px] text-[var(--muted)]">
+                    <span>Portfolio status</span>
+                    <span className="rounded-full bg-[#ff7a2f]/10 px-2 py-1 text-[9px] uppercase tracking-[0.12em] text-[var(--accent)]">Student</span>
                   </div>
-                  <div className="mt-4 h-32 rounded-2xl bg-[radial-gradient(circle_at_30%_30%,rgba(255,85,0,0.78),rgba(255,120,0,0.18)_28%,rgba(0,0,0,0)_58%)] p-3">
-                    <div className="flex h-full flex-col justify-between rounded-xl border border-white/10 bg-black/40 p-3">
-                      <div className="flex items-center justify-between text-[10px] text-slate-300">
-                        <span>VIP Build</span>
-                        <span className="rounded-full border border-cyan-400/30 bg-cyan-500/10 px-2 py-1 text-[9px] text-cyan-300">In Progress</span>
+
+                  <div className="mt-4 space-y-3">
+                    {[
+                      ['Academic profile', 'Ready'],
+                      ['Projects', 'Curated'],
+                      ['Experience', 'Growing'],
+                    ].map(([label, state], index) => (
+                      <div key={label} className="rounded-2xl border border-[var(--border)] bg-black/10 px-3 py-3">
+                        <div className="flex items-center justify-between gap-3">
+                          <span className="text-[12px] text-[var(--text)]">{label}</span>
+                          <span className={`rounded-full px-2 py-1 text-[9px] font-medium uppercase tracking-[0.12em] ${index === 0 ? 'bg-emerald-500/10 text-emerald-500' : index === 1 ? 'bg-amber-500/10 text-amber-500' : 'bg-sky-500/10 text-sky-500'}`}>
+                            {state}
+                          </span>
+                        </div>
                       </div>
-                      <div className="mt-2 h-2 rounded-full bg-white/10">
-                        <div className="h-full w-[68%] rounded-full bg-gradient-to-r from-[#ff5500] via-[#ff8800] to-[#e6ff00]" />
-                      </div>
-                    </div>
+                    ))}
+                  </div>
+
+                  <div className="mt-5 rounded-2xl border border-[var(--border)] bg-[linear-gradient(135deg,rgba(255,122,47,0.12),rgba(255,255,255,0.04))] p-3">
+                    <div className="text-[10px] uppercase tracking-[0.16em] text-[var(--muted)]">Focus</div>
+                    <div className="mt-3 text-sm leading-6 text-[var(--text)]">Web development, product thinking, research, and software engineering fundamentals.</div>
                   </div>
                 </div>
               </div>
             </div>
           </motion.div>
-        </div>
-
-        <div className="relative z-10 mt-10 flex flex-col items-center gap-5 border-t border-white/10 pt-8 text-slate-400 sm:flex-row sm:justify-center sm:gap-10">
-          <span className="text-[11px] uppercase tracking-[0.16em] text-slate-400">Trusted by</span>
-          <div className="flex flex-wrap items-center justify-center gap-6 text-sm font-semibold text-slate-500 sm:gap-10">
-            {partnerLogos.map((logo) => (
-              <span key={logo} className="inline-flex items-center gap-2">
-                {logo === 'X' ? <span className="text-lg text-white">X</span> : logo === 'Apple' ? <span className="text-lg text-white"></span> : <span className="text-base text-white">{logo[0]}</span>}
-                {logo}
-              </span>
-            ))}
-          </div>
-        </div>
-
-        <div className="relative z-10 mt-20 text-center">
-          <div className="mb-6 inline-flex items-center gap-2 rounded-full border border-white/10 bg-white/5 px-4 py-2 text-[11px] uppercase tracking-[0.18em] text-slate-300">
-            <Sparkles size={14} className="text-[#e6ff00]" />
-            How it works
-          </div>
-          <h2 className="text-3xl font-bold tracking-[-0.05em] text-white sm:text-5xl">How to get started</h2>
-          <p className="mx-auto mt-4 max-w-xl text-sm leading-7 text-slate-400">
-            Conventional design has been shown the door; the design you crave has just made its appearance.
-          </p>
-          <Link to="/contact" className="mt-7 inline-flex items-center gap-2 rounded-full bg-[#e6ff00] px-5 py-3 text-sm font-semibold text-black shadow-[0_0_28px_rgba(230,255,0,0.32)] transition hover:-translate-y-0.5 hover:bg-[#f2ff4d]">
-            See Plan
-            <ArrowRight size={16} />
-          </Link>
         </div>
       </div>
     </section>

@@ -1,11 +1,11 @@
 import { LogOut, ShieldCheck } from 'lucide-react'
-import { useState } from 'react'
+import { useEffect, useState } from 'react'
 import AcademicManager from '../components/sections/AcademicManager.jsx'
 import SectionHeading from '../components/ui/SectionHeading.jsx'
 import ProfileAssetManager from '../components/ui/ProfileAssetManager.jsx'
 import ProjectManager from '../components/sections/ProjectManager.jsx'
 import { projects as initialProjects } from '../data/portfolio.js'
-import { isAdminAuthenticated, signInAdmin, signOutAdmin } from '../services/adminAuth.js'
+import { getAdminToken, isAdminAuthenticated, signInAdmin, signOutAdmin } from '../services/adminAuth.js'
 import { readProfileAssets } from '../services/profileStorage.js'
 import { readProjects } from '../services/projectStorage.js'
 import { savePortfolioCloud } from '../services/portfolioCloud.js'
@@ -13,6 +13,14 @@ import { savePortfolioCloud } from '../services/portfolioCloud.js'
 export default function AdminPage() {
   const [authenticated, setAuthenticated] = useState(isAdminAuthenticated())
   const [syncMessage, setSyncMessage] = useState('')
+  const [messages, setMessages] = useState([])
+
+  useEffect(() => {
+    if (!authenticated) return
+    fetch('/api/contact', { headers: { Authorization: `Bearer ${getAdminToken()}` } })
+      .then((response) => response.json())
+      .then((result) => setMessages(result.messages || []))
+  }, [authenticated])
 
   async function publishBrowserData() {
     setSyncMessage('Publishing...')
@@ -29,7 +37,7 @@ export default function AdminPage() {
 
   if (!authenticated) return <AdminLogin onSuccess={() => setAuthenticated(true)} />
 
-  return <section className="py-12 pb-24 md:py-20 md:pb-36"><div className="mb-8 flex items-center justify-between gap-4 rounded-xl border border-emerald-400/20 bg-emerald-400/5 p-4"><div className="flex items-center gap-3"><ShieldCheck className="text-emerald-400" size={20} /><div><strong className="block text-sm text-slate-100">Owner workspace</strong><span className="text-[11px] text-slate-400">Only you can see and manage these controls.</span></div></div><button type="button" onClick={() => { signOutAdmin(); setAuthenticated(false) }} className="inline-flex items-center gap-2 rounded-lg border border-slate-700 px-3 py-2 text-[10px] text-slate-300 hover:border-red-400 hover:text-red-300"><LogOut size={14} /> Sign out</button></div><SectionHeading kicker="Owner / Admin" title="Manage your public profile." text="Changes made here are the records visitors see on the public website." /><div className="mb-10 rounded-2xl border border-slate-800 bg-slate-900/50 p-5"><h2 className="text-lg font-bold text-slate-100">Public profile assets</h2><p className="mt-1 text-xs text-slate-400">Only upload here. Visitors can only see the configured photo and signature.</p><ProfileAssetManager /></div><div className="mb-10 rounded-2xl border border-[#b6f36b]/20 bg-[#b6f36b]/5 p-5"><div className="flex flex-col justify-between gap-4 sm:flex-row sm:items-center"><div><h2 className="text-sm font-bold text-slate-100">Centralize current browser data</h2><p className="mt-1 text-xs leading-5 text-slate-400">Use this once after setup to publish your existing local data for every visitor.</p></div><button type="button" onClick={publishBrowserData} className="rounded-lg bg-[#b6f36b] px-4 py-2.5 text-xs font-bold text-[#09110b]">Publish browser data</button></div>{syncMessage && <p className="mt-3 text-xs text-[#b6f36b]">{syncMessage}</p>}</div><div className="space-y-12"><AcademicManager /><ProjectManager /></div></section>
+  return <section className="py-12 pb-24 md:py-20 md:pb-36"><div className="mb-8 flex items-center justify-between gap-4 rounded-xl border border-emerald-400/20 bg-emerald-400/5 p-4"><div className="flex items-center gap-3"><ShieldCheck className="text-emerald-400" size={20} /><div><strong className="block text-sm text-slate-100">Owner workspace</strong><span className="text-[11px] text-slate-400">Only you can see and manage these controls.</span></div></div><button type="button" onClick={() => { signOutAdmin(); setAuthenticated(false) }} className="inline-flex items-center gap-2 rounded-lg border border-slate-700 px-3 py-2 text-[10px] text-slate-300 hover:border-red-400 hover:text-red-300"><LogOut size={14} /> Sign out</button></div><SectionHeading kicker="Owner / Admin" title="Manage your public profile." text="Changes made here are the records visitors see on the public website." /><div className="mb-10 rounded-2xl border border-slate-800 bg-slate-900/50 p-5"><h2 className="text-lg font-bold text-slate-100">Contact inbox ({messages.length})</h2><div className="mt-4 space-y-3">{messages.map((item) => <details key={item.id} className="rounded-lg border border-slate-800 p-4 text-xs text-slate-400"><summary className="cursor-pointer text-slate-200">{item.subject} · {item.name} · {new Date(item.created_at).toLocaleString()}</summary><p className="mt-3">{item.email}</p><p className="mt-2 whitespace-pre-wrap leading-5">{item.message}</p></details>)}</div></div><div className="mb-10 rounded-2xl border border-slate-800 bg-slate-900/50 p-5"><h2 className="text-lg font-bold text-slate-100">Public profile assets</h2><p className="mt-1 text-xs text-slate-400">Only upload here. Visitors can only see the configured photo and signature.</p><ProfileAssetManager /></div><div className="mb-10 rounded-2xl border border-[#b6f36b]/20 bg-[#b6f36b]/5 p-5"><div className="flex flex-col justify-between gap-4 sm:flex-row sm:items-center"><div><h2 className="text-sm font-bold text-slate-100">Centralize current browser data</h2><p className="mt-1 text-xs leading-5 text-slate-400">Use this once after setup to publish your existing local data for every visitor.</p></div><button type="button" onClick={publishBrowserData} className="rounded-lg bg-[#b6f36b] px-4 py-2.5 text-xs font-bold text-[#09110b]">Publish browser data</button></div>{syncMessage && <p className="mt-3 text-xs text-[#b6f36b]">{syncMessage}</p>}</div><div className="space-y-12"><AcademicManager /><ProjectManager /></div></section>
 }
 
 function AdminLogin({ onSuccess }) {

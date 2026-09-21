@@ -4,6 +4,10 @@ export function isAdminAuthenticated() {
   return Boolean(sessionStorage.getItem(ADMIN_SESSION_KEY))
 }
 
+export function getAdminToken() {
+  return sessionStorage.getItem(ADMIN_SESSION_KEY) || ''
+}
+
 export async function signInAdmin(accessCode) {
   const response = await fetch(import.meta.env.VITE_PORTFOLIO_API_URL || '/api/portfolio', {
     method: 'POST',

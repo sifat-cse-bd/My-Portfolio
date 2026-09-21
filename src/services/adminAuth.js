@@ -1,13 +1,18 @@
 const ADMIN_SESSION_KEY = 'faruk-portfolio-admin-session'
 
 export function isAdminAuthenticated() {
-  return sessionStorage.getItem(ADMIN_SESSION_KEY) === 'authenticated'
+  return Boolean(sessionStorage.getItem(ADMIN_SESSION_KEY))
 }
 
-export function signInAdmin(accessCode) {
-  const configuredCode = import.meta.env.VITE_ADMIN_ACCESS_CODE
-  if (!configuredCode || accessCode !== configuredCode) return false
-  sessionStorage.setItem(ADMIN_SESSION_KEY, 'authenticated')
+export async function signInAdmin(accessCode) {
+  const response = await fetch(import.meta.env.VITE_PORTFOLIO_API_URL || '/api/portfolio', {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify({ accessCode }),
+  })
+  if (!response.ok) return false
+  const { token } = await response.json()
+  sessionStorage.setItem(ADMIN_SESSION_KEY, token)
   return true
 }
 

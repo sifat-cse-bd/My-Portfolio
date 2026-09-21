@@ -1,4 +1,20 @@
-# React + Vite
+# My Route Portfolio
+
+## Central portfolio data
+
+The admin page writes projects, education and profile assets to Supabase through the Vercel function at `api/portfolio.js`. Browser `localStorage` is retained only as an offline fallback.
+
+### One-time deployment setup
+
+1. Create a Supabase project and run [`supabase-schema.sql`](supabase-schema.sql) in its SQL editor.
+2. Add these Vercel environment variables for Production (and Preview if needed):
+	- `SUPABASE_URL`: the Supabase project URL.
+	- `SUPABASE_SERVICE_ROLE_KEY`: the Supabase service-role key. Keep this server-only; never prefix it with `VITE_`.
+	- `ADMIN_ACCESS_CODE`: the private admin password used by the API.
+3. Redeploy the project.
+4. Open `/admin`, sign in, and click **Publish browser data** once. This migrates the current browser's projects, education and assets to the central database.
+
+After that, changes made in `/admin` are visible to every visitor and browser. Do not put `SUPABASE_SERVICE_ROLE_KEY` in frontend environment variables.
 
 This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
 

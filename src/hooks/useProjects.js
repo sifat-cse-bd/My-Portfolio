@@ -1,6 +1,7 @@
-import { useState } from 'react'
+import { useEffect, useState } from 'react'
 import { projects as initialProjects } from '../data/portfolio.js'
 import { readProjects, writeProjects } from '../services/projectStorage.js'
+import { readPortfolioCloud, savePortfolioCloud } from '../services/portfolioCloud.js'
 
 function withIds(items) {
   return items.map((item, index) => ({
@@ -15,9 +16,16 @@ function withIds(items) {
 export function useProjects() {
   const [items, setItems] = useState(() => withIds(readProjects().length ? readProjects() : initialProjects))
 
+  useEffect(() => {
+    readPortfolioCloud().then((cloud) => {
+      if (Array.isArray(cloud.projects)) setItems(withIds(cloud.projects))
+    }).catch(() => {})
+  }, [])
+
   function persist(nextItems) {
     setItems(nextItems)
     writeProjects(nextItems)
+    savePortfolioCloud({ projects: nextItems }).catch(() => {})
   }
 
   function addProject(project) {

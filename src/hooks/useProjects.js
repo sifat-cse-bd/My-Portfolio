@@ -14,12 +14,13 @@ function withIds(items) {
 }
 
 export function useProjects() {
+  const [loading, setLoading] = useState(true)
   const [items, setItems] = useState(() => withIds(readProjects().length ? readProjects() : initialProjects))
 
   useEffect(() => {
     readPortfolioCloud().then((cloud) => {
       if (Array.isArray(cloud.projects)) setItems(withIds(cloud.projects))
-    }).catch(() => {})
+    }).catch(() => {}).finally(() => setLoading(false))
   }, [])
 
   function persist(nextItems) {
@@ -41,5 +42,5 @@ export function useProjects() {
     persist(items.filter((item) => item.id !== id))
   }
 
-  return { items, addProject, updateProject, removeProject }
+  return { items, loading, addProject, updateProject, removeProject }
 }

@@ -3,12 +3,13 @@ import { readProfileAssets, saveProfileAsset } from '../services/profileStorage.
 import { readPortfolioCloud, savePortfolioCloud } from '../services/portfolioCloud.js'
 
 export function useAssetPreview(type) {
-  const [preview, setPreview] = useState(() => readProfileAssets()[type] || '')
+  const [loading, setLoading] = useState(true)
+  const [preview, setPreview] = useState(() => readProfileAssets()[type] || '__loading__')
 
   useEffect(() => {
     readPortfolioCloud().then((cloud) => {
-      if (cloud.assets?.[type]) setPreview(cloud.assets[type])
-    }).catch(() => {})
+      setPreview(cloud.assets?.[type] || '')
+    }).catch(() => {}).finally(() => setLoading(false))
   }, [type])
 
   useEffect(() => () => {
@@ -28,5 +29,5 @@ export function useAssetPreview(type) {
     reader.readAsDataURL(file)
   }
 
-  return { preview, handleFileChange }
+  return { preview, loading, handleFileChange }
 }

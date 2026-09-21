@@ -1,26 +1,31 @@
 import { useEffect, useState } from 'react'
-import { education as initialEducation, getEducationType, sortEducation } from '../data/portfolio.js'
-import { readEducation, writeEducation } from '../services/educationStorage.js'
+import { getEducationType, sortEducation } from '../data/portfolio.js'
 import { readPortfolioCloud, savePortfolioCloud } from '../services/portfolioCloud.js'
+
+function normalizeEducation(items) {
+  return sortEducation(items.map((item) => ({
+    ...item,
+    id: item.id || crypto.randomUUID(),
+    type: getEducationType(item),
+  })))
+}
 
 export function useEducation() {
   const [loading, setLoading] = useState(true)
-  const [items, setItems] = useState(() => {
-    const saved = readEducation()
-    const source = saved.length ? saved : initialEducation
-    return sortEducation(source.map((item) => item.id ? { ...item, type: getEducationType(item) } : { ...item, id: crypto.randomUUID(), type: getEducationType(item) }))
-  })
+  const [items, setItems] = useState([])
 
   useEffect(() => {
     readPortfolioCloud().then((cloud) => {
-      if (Array.isArray(cloud.education)) setItems(sortEducation(cloud.education.map((item) => ({ ...item, type: getEducationType(item) }))))
+      if (Array.isArray(cloud.education)) {
+        const normalizedItems = normalizeEducation(cloud.education)
+        setItems(normalizedItems)
+      }
     }).catch(() => {}).finally(() => setLoading(false))
   }, [])
 
   function persist(nextItems) {
-    const sortedItems = sortEducation(nextItems)
+    const sortedItems = normalizeEducation(nextItems)
     setItems(sortedItems)
-    writeEducation(sortedItems)
     savePortfolioCloud({ education: sortedItems }).catch(() => {})
   }
 
@@ -28,13 +33,17 @@ export function useEducation() {
     persist([{ ...item, type: getEducationType(item), id: crypto.randomUUID() }, ...items])
   }
 
-  function updateEducation(id, item) {
-    persist(items.map((entry) => entry.id === id ? { ...entry, ...item } : entry))
+  function updateEducation(target, item) {
+    persist(items.map((entry) => entry === target || entry.id === target ? { ...entry, ...item } : entry))
   }
 
-  function removeEducation(id) {
-    persist(items.filter((entry) => entry.id !== id))
+  function removeEducation(target) {
+    persist(items.filter((entry) => entry !== target && entry.id !== target))
   }
 
-  return { items, loading, addEducation, updateEducation, removeEducation }
+  function clearEducation() {
+    persist([])
+  }
+
+  return { items, loading, addEducation, updateEducation, removeEducation, clearEducation }
 }

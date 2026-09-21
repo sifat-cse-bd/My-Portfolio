@@ -4,8 +4,7 @@ import AcademicManager from '../components/sections/AcademicManager.jsx'
 import SectionHeading from '../components/ui/SectionHeading.jsx'
 import ProfileAssetManager from '../components/ui/ProfileAssetManager.jsx'
 import ProjectManager from '../components/sections/ProjectManager.jsx'
-import { education as initialEducation, projects as initialProjects } from '../data/portfolio.js'
-import { readEducation } from '../services/educationStorage.js'
+import { projects as initialProjects } from '../data/portfolio.js'
 import { isAdminAuthenticated, signInAdmin, signOutAdmin } from '../services/adminAuth.js'
 import { readProfileAssets } from '../services/profileStorage.js'
 import { readProjects } from '../services/projectStorage.js'
@@ -20,7 +19,6 @@ export default function AdminPage() {
     try {
       await savePortfolioCloud({
         projects: readProjects().length ? readProjects() : initialProjects,
-        education: readEducation().length ? readEducation() : initialEducation,
         assets: readProfileAssets(),
       })
       setSyncMessage('Published. Visitors now see this data from the central database.')
